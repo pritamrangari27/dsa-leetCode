@@ -1,0 +1,23 @@
+class Solution(object):
+    def removeNthFromEnd(self, head, n):
+        temp=head
+        length=1
+        while temp.next is not None:    
+            temp=temp.next
+            length+=1
+        if n==length:
+            return head.next
+        pos=length-n
+        temp=head
+        count=1
+        while count<pos:
+            temp=temp.next
+            count+=1
+        temp.next=temp.next.next
+        return head
+            
+        
+
+
+
+        
