@@ -1,0 +1,17 @@
+class Solution(object):
+    def reverseList(self, head):
+        temp=head
+        stack=[]
+
+        while temp is not None:
+            stack.append(temp.val)
+            temp=temp.next
+        
+        temp=head
+        
+        while temp is not None:
+            temp.val=stack.pop()
+            temp=temp.next
+
+        return head
+        
