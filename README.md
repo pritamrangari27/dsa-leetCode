@@ -26,9 +26,5 @@ I actively practice DSA and document my learning journey through this repository
 
 ![LeetCode Stats](https://leetcard.jacoblin.cool/pritamrangari?theme=dark&font=Karma)
 
----
 
-## 📂 Repository Structure
-
-Solutions are organized topic-wise for easy navigation:
 
