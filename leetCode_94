@@ -1,0 +1,13 @@
+class Solution(object):
+    def inorderTraversal(self, root):
+        res=[]
+        def inOrder(node):
+            if node==None:
+                return None
+            inOrder(node.left)
+            res.append(node.val)
+            inOrder(node.right)
+        inOrder(root)
+        return res
+
+        
