@@ -1,0 +1,12 @@
+class Solution(object):
+    def postorderTraversal(self, root):
+        res=[]
+        def postOrder(node):
+            if node is None:
+                return
+            postOrder(node.left)
+            postOrder(node.right)
+            res.append(node.val)
+        postOrder(root)
+        return res
+        
