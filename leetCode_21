@@ -1,3 +1,4 @@
+Solution 1:
 class Solution(object):
     def mergeTwoLists(self, l1, l2):
         dummy = ListNode(-1)
@@ -18,3 +19,18 @@ class Solution(object):
             current.next = l2
 
         return dummy.next
+
+Solution 2:
+class Solution:
+    def mergeTwoLists(self, list1, list2):
+        if not list1:
+            return list2
+        if not list2:
+            return list1
+
+        if list1.val < list2.val:
+            list1.next = self.mergeTwoLists(list1.next, list2)
+            return list1
+        else:
+            list2.next = self.mergeTwoLists(list1, list2.next)
+            return list2
