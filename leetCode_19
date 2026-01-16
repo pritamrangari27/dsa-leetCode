@@ -1,3 +1,4 @@
+Solution 1:
 class Solution(object):
     def removeNthFromEnd(self, head, n):
         temp=head
@@ -15,8 +16,30 @@ class Solution(object):
             count+=1
         temp.next=temp.next.next
         return head
-            
-        
+
+Solution 2:
+class Solution:
+    def removeNthFromEnd(self, head, n):
+        # Step 1: find length
+        length = 0
+        curr = head
+        while curr:
+            length += 1
+            curr = curr.next
+
+        # Step 2: if head needs to be removed
+        if n == length:
+            return head.next
+
+        # Step 3: move to node before deletion
+        curr = head
+        for _ in range(length - n - 1):
+            curr = curr.next
+
+        # Step 4: delete node
+        curr.next = curr.next.next
+        return head
+
 
 
 
