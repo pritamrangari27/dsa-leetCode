@@ -1,3 +1,4 @@
+Solution 1:
 class Solution(object):
     def longestCommonPrefix(self, strs):
         if not strs:  
@@ -11,3 +12,16 @@ class Solution(object):
                 if prefix == "":
                     return ""         
         return prefix
+
+Solution 2:
+class Solution:
+    def longestCommonPrefix(self, strs):
+        if not strs:
+            return ""
+
+        for i in range(len(strs[0])):
+            ch = strs[0][i]
+            for s in strs[1:]:
+                if i >= len(s) or s[i] != ch:
+                    return strs[0][:i]
+        return strs[0]
