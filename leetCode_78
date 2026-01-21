@@ -1,0 +1,15 @@
+Solution 1:
+class Solution(object):
+    def subsets(self, nums):
+        result=[]
+        def solve(idx,subSet):
+            if idx>=len(nums):
+                result.append(subSet[:])
+                return
+            subSet.append(nums[idx])
+            solve(idx+1,subSet)
+            subSet.pop()
+            solve(idx+1,subSet)
+        solve(0,[])
+        return result
+        
