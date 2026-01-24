@@ -1,0 +1,22 @@
+class Solution(object):
+    def generateParenthesis(self, n):
+        result=[]
+        nums=[""]*(n*2)
+        def solve(idx,total,nums,result):
+            if idx>=len(nums):
+                if total==0:
+                    result.append("".join(nums))
+                return
+            if total<0:
+                return
+            elif total>len(nums)//2:
+                return
+            nums[idx]="("
+            sum=total+1
+            solve(idx+1,sum,nums,result)
+            nums[idx]=")"
+            sum=total-1
+            solve(idx+1,sum,nums,result)
+        solve(0,0,nums,result)
+        return result
+        
