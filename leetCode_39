@@ -1,0 +1,23 @@
+class Solution(object):
+    def combinationSum(self, candidates, target):
+        result=[]
+        subset=[]
+        def solve(idx, total, candidates,target, result,subset):
+            if total==target:
+                result.append(subset[:])
+                return
+            elif total>target:
+                return
+            if idx>=(len(candidates)):
+                return
+            subset.append(candidates[idx])
+            sum=total+candidates[idx]
+            solve(idx,sum,candidates,target,result,subset)
+            subset.pop()
+            sum=total
+            solve(idx+1,sum,candidates,target,result,subset)
+
+        solve(0,0,candidates,target,result,subset)
+        return result
+            
+        
