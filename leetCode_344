@@ -1,0 +1,10 @@
+#Reversed String
+class Solution(object):
+    def reverseString(self, s):
+        n=len(s)
+        result=[]
+        for i in range(n-1,0):
+            for j in range(0,n-1):
+                s[i].append(result[])
+                i-=1
+            return result
