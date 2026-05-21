@@ -1,0 +1,23 @@
+class Solution(object):
+    def thirdMax(self, nums):
+        Max=float("-inf")
+        firstMax=float("-inf")
+        secondMax=float("-inf")
+        thirdMax=float("-inf")
+        for i in nums:
+            if i==firstMax or i==secondMax or i==thirdMax:
+                continue
+            if i>firstMax:
+                thirdMax=secondMax
+                secondMax=firstMax
+                firstMax=i
+            elif i>secondMax:
+                thirdMax=secondMax
+                secondMax=i
+            elif i>thirdMax:
+                thirdMax=i
+        if thirdMax==float("-inf"):
+                thirdMax=firstMax
+        return thirdMax
+        
+        
