@@ -1,0 +1,14 @@
+class Solution(object):
+    def findDuplicates(self, nums):
+        res=[]
+        mySet=set()
+        if len(nums)==1:
+            return []
+        for i in nums:
+            if i in mySet:
+                res.append(i)
+            else:
+                mySet.add(i)
+        return res
+
+        
