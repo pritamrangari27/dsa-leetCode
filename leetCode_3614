@@ -1,0 +1,38 @@
+class Solution:
+    def processStr(self, s, k):
+        m = 0
+
+        # Compute final length
+        for c in s:
+            if c == '*':
+                m = max(0, m - 1)
+            elif c == '#':
+                m *= 2
+            elif c == '%':
+                pass
+            else:
+                m += 1
+
+        if k >= m:
+            return '.'
+
+        # Work backwards
+        for c in reversed(s):
+            if c == '*':
+                m += 1
+
+            elif c == '#':
+                half = m // 2
+                if k >= half:
+                    k -= half
+                m = half
+
+            elif c == '%':
+                k = m - 1 - k
+
+            else:  # letter
+                m -= 1
+                if k == m:
+                    return c
+
+        return '.'
