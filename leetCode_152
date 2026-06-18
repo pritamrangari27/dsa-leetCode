@@ -1,0 +1,10 @@
+class Solution(object):
+    def maxProduct(self, nums):
+        ans=nums[0]
+        for i in range(len(nums)):
+            prod=1
+            for j in range(i,len(nums)):
+                prod*=nums[j]
+                if prod>ans:
+                    ans=prod
+        return ans
