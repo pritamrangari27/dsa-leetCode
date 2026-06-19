@@ -1,0 +1,20 @@
+class Solution:
+    def maxArea(self, height):
+        left=0
+        right=len(height)-1
+        ans=0
+        while left<right:
+            width=right-left
+            if height[left]<height[right]:
+                minA=height[left]
+            else:
+                minA=height[right]
+            area=minA*width
+            if  area>ans:
+                ans=area
+            if height[left]<height[right]:
+                left+=1
+            else:
+                right-=1
+
+        return ans
