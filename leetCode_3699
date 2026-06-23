@@ -1,0 +1,41 @@
+class Solution:
+    def zigZagArrays(self, n,l, r) :
+        MOD = 10**9 + 7
+        m = r - l + 1
+
+        if n == 1:
+            return m
+
+        up = [0] * m
+        down = [0] * m
+
+        # length = 2
+        for b in range(m):
+            up[b] = b                  # a < b
+            down[b] = m - 1 - b        # a > b
+
+        for _ in range(3, n + 1):
+            pref_up = [0] * (m + 1)
+            pref_down = [0] * (m + 1)
+
+            for i in range(m):
+                pref_up[i + 1] = (pref_up[i] + up[i]) % MOD
+                pref_down[i + 1] = (pref_down[i] + down[i]) % MOD
+
+            total_up = pref_up[m]
+            total_down = pref_down[m]
+
+            new_up = [0] * m
+            new_down = [0] * m
+
+            for y in range(m):
+                # previous value < y
+                new_up[y] = pref_down[y]
+
+                # previous value > y
+                new_down[y] = (total_up - pref_up[y + 1]) % MOD
+
+            up = new_up
+            down = new_down
+
+        return (sum(up) + sum(down)) % MOD
