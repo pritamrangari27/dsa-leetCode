@@ -1,0 +1,13 @@
+class Solution:
+    def sumAndMultiply(self, n):
+        num = 0
+        place = 1
+        digit_sum = 0
+        while n > 0:
+            digit = n % 10
+            if digit != 0:
+                num += digit * place
+                place *= 10
+                digit_sum += digit
+            n //= 10
+        return num * digit_sum
