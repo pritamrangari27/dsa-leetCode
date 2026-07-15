@@ -1,0 +1,7 @@
+class Solution:
+    def gcdOfOddEvenSums(self, n):
+        oddSum = n * n
+        evenSum = n * (n + 1)
+        while evenSum != 0:
+            oddSum, evenSum = evenSum, oddSum % evenSum
+        return oddSum
