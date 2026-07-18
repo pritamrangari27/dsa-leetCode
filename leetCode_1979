@@ -1,0 +1,9 @@
+class Solution(object):
+    def findGCD(self, nums):
+        Min=min(nums)
+        Max=max(nums)
+        ans=1
+        for i in range(1,Min+1):
+            if Min%i==0 and Max%i==0:
+                ans=i
+        return ans
