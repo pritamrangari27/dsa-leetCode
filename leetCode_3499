@@ -1,0 +1,18 @@
+class Solution:
+    def maxActiveSectionsAfterTrade(self, s):
+        total_ones = 0
+        max_gain = 0
+        i = 0
+        prev_zero_len = float("-inf")
+        while i < len(s):
+            j = i
+            while j < len(s) and s[j] == s[i]:
+                j += 1
+            length = j - i
+            if s[i] == '1':
+                total_ones += length
+            else:
+                max_gain = max(max_gain, prev_zero_len + length)
+                prev_zero_len = length
+            i = j
+        return total_ones + max_gain
