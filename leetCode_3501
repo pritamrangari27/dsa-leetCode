@@ -1,0 +1,99 @@
+class SparseTable:
+    def __init__(self, data: list[int]):
+        self.n = len(data)
+        if self.n == 0:
+            return
+        self.K = self.n.bit_length()
+        self.st = [[0] * self.n for _ in range(self.K)]
+        for i in range(self.n):
+            self.st[0][i] = data[i]
+        for j in range(1, self.K):
+            length = 1 << (j - 1)
+            for i in range(self.n - (1 << j) + 1):
+                self.st[j][i] = max(self.st[j - 1][i], self.st[j - 1][i + length])
+
+    def query(self, L: int, R: int) -> int:
+        if L > R or L < 0 or R >= self.n:
+            return 0
+        j = (R - L + 1).bit_length() - 1
+        return max(self.st[j][L], self.st[j][R - (1 << j) + 1])
+
+
+class Solution:
+    def maxActiveSectionsAfterTrade(self, s: str, queries: list[list[int]]) -> list[int]:
+        n = len(s)
+        total_ones = s.count('1')
+        
+        # 1. Build zero groups & track last zero group at or before each index
+        zero_groups = []  # List of tuples: (start_idx, length)
+        zero_group_index = [-1] * n
+        
+        for i in range(n):
+            if s[i] == '0':
+                if i > 0 and s[i - 1] == '0':
+                    zero_groups[-1] = (zero_groups[-1][0], zero_groups[-1][1] + 1)
+                else:
+                    zero_groups.append((i, 1))
+            zero_group_index[i] = len(zero_groups) - 1
+
+        m = len(zero_groups)
+        if m < 2:
+            return [total_ones] * len(queries)
+
+        # 2. Precompute adjacent zero-group merge sums
+        merge_lengths = [
+            zero_groups[k][1] + zero_groups[k + 1][1] 
+            for k in range(m - 1)
+        ]
+        st = SparseTable(merge_lengths)
+
+        ans = []
+        for l, r in queries:
+            idx_l = zero_group_index[l]
+            idx_r = zero_group_index[r]
+
+            # Length of trimmed left zero-group (if s[l] == '0')
+            left_len = 0
+            if s[l] == '0' and idx_l != -1:
+                group_start = zero_groups[idx_l][0]
+                group_len = zero_groups[idx_l][1]
+                left_len = group_len - (l - group_start)
+
+            # Length of trimmed right zero-group (if s[r] == '0')
+            right_len = 0
+            if s[r] == '0' and idx_r != -1:
+                group_start = zero_groups[idx_r][0]
+                right_len = r - group_start + 1
+
+            # Determine range of fully internal adjacent group pairs
+            start_adj_group = idx_l + 1
+            end_adj_group = idx_r if s[r] == '1' else idx_r - 1
+
+            # Convert to indices in Sparse Table (pair k merges group k and k+1)
+            start_st = start_adj_group
+            end_st = end_adj_group - 1
+
+            active_sections = total_ones
+
+            # Case 1: Merge trimmed left and right zero-groups directly
+            if s[l] == '0' and s[r] == '0' and idx_l + 1 == idx_r:
+                active_sections = max(active_sections, total_ones + left_len + right_len)
+
+            # Case 2: Max of fully interior adjacent zero-groups
+            if start_st <= end_st:
+                active_sections = max(active_sections, total_ones + st.query(start_st, end_st))
+
+            # Case 3: Merge trimmed left zero-group with next interior zero-group
+            if s[l] == '0':
+                limit_r = idx_r if s[r] == '1' else idx_r - 1
+                if idx_l + 1 <= limit_r and idx_l + 1 < m:
+                    active_sections = max(active_sections, total_ones + left_len + zero_groups[idx_l + 1][1])
+
+            # Case 4: Merge trimmed right zero-group with previous interior zero-group
+            if s[r] == '0':
+                if idx_r - 1 > idx_l and idx_r - 1 >= 0:
+                    active_sections = max(active_sections, total_ones + right_len + zero_groups[idx_r - 1][1])
+
+            ans.append(active_sections)
+
+        return ans
