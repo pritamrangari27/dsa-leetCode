@@ -1,4 +1,4 @@
-def longRepeatingChar(s):
+def longSubstringWithoutRepeating(s):
     if not s:
         return 0
 
