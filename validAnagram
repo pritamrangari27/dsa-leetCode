@@ -1,0 +1,16 @@
+def validAnagram(s1,s2):
+	if len(s1)!=len(s2):
+		return False
+	seen={}
+	for ch in s1:
+		if ch in seen:
+			seen[ch]+=1
+		else:
+			seen[ch]=1
+	for ch in s2:
+		if ch not in seen:
+			return False
+		seen[ch]-=1
+		if seen[ch]<0:
+			return False
+	return True
