@@ -1,0 +1,12 @@
+def kadaneAlgorithm(arr):
+	if not arr:
+		return 0
+	curr=0
+	maxi=float("-inf")
+	for ch in arr:
+		curr+=ch
+		if curr>maxi:
+			maxi=curr
+		if curr<0:
+			curr=0
+	return maxi
