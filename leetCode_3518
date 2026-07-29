@@ -1,0 +1,47 @@
+from collections import Counter
+class Solution(object):
+    def __init__(self):
+        self.MAX = 10 ** 6 + 1
+    def smallestPalindrome(self, s, k):
+        count = Counter(s)
+        halfCount = [0] * 26
+        mid = ""
+        for ch, freq in count.items():
+            halfCount[ord(ch) - ord('a')] = freq // 2
+            if freq % 2:
+                mid = ch
+        if self.countWays(halfCount) < k:
+            return ""
+        left = []
+        total = sum(halfCount)
+        for _ in range(total):
+            for i in range(26):
+                if halfCount[i] == 0:
+                    continue
+                halfCount[i] -= 1
+                ways = self.countWays(halfCount)
+                if ways >= k:
+                    left.append(chr(i + ord('a')))
+                    break
+                else:
+                    k -= ways
+                    halfCount[i] += 1
+        left = "".join(left)
+        return left + mid + left[::-1]
+    def countWays(self, cnt):
+        total = sum(cnt)
+        ans = 1
+        for x in cnt:
+            ans *= self.nCr(total, x)
+            if ans >= self.MAX:
+                return self.MAX
+            total -= x
+        return ans
+    def nCr(self, n, r):
+        r = min(r, n - r)
+        ans = 1
+        for i in range(1, r + 1):
+            ans = ans * (n - i + 1) // i
+            if ans >= self.MAX:
+                return self.MAX
+        return ans
