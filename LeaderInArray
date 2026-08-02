@@ -1,0 +1,12 @@
+def leaderInArray(arr):
+	if not array:
+		return -1
+	ans=[]
+	maxi=arr[-1]
+	ans.append(maxi)
+	for i in range(len(arr)-2,-1,-1):
+		if arr[i]>=maxi:
+			ans.append[arr[i]
+			maxi=arr[i]
+	ans.reverse()
+	return ans
