@@ -1,0 +1,126 @@
+class Solution(object):
+    def smallestNumber(self, num, t):
+        """
+        :type num: str
+        :type t: int
+        :rtype: str
+        """
+        # Step 1: Factorize t into prime factors 2, 3, 5, 7
+        counts = {2: 0, 3: 0, 5: 0, 7: 0}
+        temp_t = t
+        for p in [2, 3, 5, 7]:
+            while temp_t % p == 0:
+                counts[p] += 1
+                temp_t //= p
+        
+        if temp_t > 1:
+            return "-1"
+
+        def get_min_digits_needed(c2, c3, c5, c7):
+            """Calculates minimum non-zero digits needed to cover factor counts."""
+            c8 = c2 // 3
+            rem2 = c2 % 3
+            
+            c9 = c3 // 2
+            rem3 = c3 % 2
+            
+            c6 = min(rem2, rem3)
+            rem2 -= c6
+            rem3 -= c6
+            
+            c4 = rem2 // 2
+            rem2 %= 2
+            
+            return c8 + c9 + c6 + c4 + rem2 + rem3 + c5 + c7
+
+        def fill_suffix(c2, c3, c5, c7, length):
+            """Fills suffix of given length to form the smallest lexicographical representation."""
+            digits = []
+            
+            # Pack 3s into 9s
+            digits.extend(['9'] * (c3 // 2))
+            c3 %= 2
+            
+            # Pack 2s into 8s
+            digits.extend(['8'] * (c2 // 3))
+            c2 %= 3
+            
+            # Add 7s and 5s
+            digits.extend(['7'] * c7)
+            digits.extend(['5'] * c5)
+            
+            # FIXED: Corrected the combination for c2=2 and c3=1 to use '2' and '6' (product 12)
+            if c2 == 2 and c3 == 1:
+                digits.extend(['2', '6'])
+            elif c2 == 2:
+                digits.append('4')
+            elif c2 == 1 and c3 == 1:
+                digits.append('6')
+            elif c2 == 1:
+                digits.append('2')
+            elif c3 == 1:
+                digits.append('3')
+
+            if len(digits) > length:
+                return None
+            
+            # Pad remaining spaces on the left with '1's
+            pad_ones = length - len(digits)
+            return "1" * pad_ones + "".join(sorted(digits))
+
+        digit_factors = {
+            1: (0, 0, 0, 0), 2: (1, 0, 0, 0), 3: (0, 1, 0, 0),
+            4: (2, 0, 0, 0), 5: (0, 0, 1, 0), 6: (1, 1, 0, 0),
+            7: (0, 0, 0, 1), 8: (3, 0, 0, 0), 9: (0, 2, 0, 0)
+        }
+
+        n = len(num)
+        zero_pos = num.find('0')
+        
+        # Check if num itself has no '0' and is divisible by t
+        if zero_pos == -1:
+            p2 = p3 = p5 = p7 = 0
+            for ch in num:
+                f2, f3, f5, f7 = digit_factors[int(ch)]
+                p2 += f2; p3 += f3; p5 += f5; p7 += f7
+            if p2 >= counts[2] and p3 >= counts[3] and p5 >= counts[5] and p7 >= counts[7]:
+                return num
+
+        # Store cumulative prefix factor counts
+        p_factors = [(0, 0, 0, 0)] * (n + 1)
+        for i in range(n):
+            if num[i] == '0':
+                break
+            d = int(num[i])
+            f2, f3, f5, f7 = digit_factors[d]
+            p_factors[i + 1] = (
+                p_factors[i][0] + f2, p_factors[i][1] + f3,
+                p_factors[i][2] + f5, p_factors[i][3] + f7
+            )
+
+        start_idx = n - 1 if zero_pos == -1 else zero_pos
+
+        # Backtrack right-to-left to find a number of same length n
+        for i in range(start_idx, -1, -1):
+            curr_digit = int(num[i]) if num[i] != '0' else 0
+            cur_2, cur_3, cur_5, cur_7 = p_factors[i]
+            
+            for d in range(curr_digit + 1, 10):
+                f2, f3, f5, f7 = digit_factors[d]
+                rem_len = n - 1 - i
+                
+                req_2 = max(0, counts[2] - (cur_2 + f2))
+                req_3 = max(0, counts[3] - (cur_3 + f3))
+                req_5 = max(0, counts[5] - (cur_5 + f5))
+                req_7 = max(0, counts[7] - (cur_7 + f7))
+                
+                if get_min_digits_needed(req_2, req_3, req_5, req_7) <= rem_len:
+                    suffix = fill_suffix(req_2, req_3, req_5, req_7, rem_len)
+                    if suffix is not None:
+                        return num[:i] + str(d) + suffix
+
+        # Minimum target length must account for total required digits
+        min_len_needed = get_min_digits_needed(counts[2], counts[3], counts[5], counts[7])
+        target_len = max(n + 1, min_len_needed)
+        
+        return fill_suffix(counts[2], counts[3], counts[5], counts[7], target_len)
