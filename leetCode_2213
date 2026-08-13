@@ -1,5 +1,6 @@
 class Solution(object):
     def longestRepeating(self, s, queryCharacters, queryIndices):
+        n=len(s)
         tree = [None] * (4 * n)
         def make_leaf(ch):
             return [ch, ch, 1, 1, 1, 1]
