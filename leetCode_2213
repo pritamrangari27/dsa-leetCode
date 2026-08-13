@@ -1,0 +1,61 @@
+class Solution(object):
+    def longestRepeating(self, s, queryCharacters, queryIndices):
+        tree = [None] * (4 * n)
+        def make_leaf(ch):
+            return [ch, ch, 1, 1, 1, 1]
+        def merge(a, b):
+            if a is None:
+                return b
+            if b is None:
+                return a
+            left_char = a[0]
+            right_char = b[1]
+            left_count = a[2]
+            right_count = b[3]
+            best = max(a[4], b[4])
+            if a[1] == b[0]:
+                combined = a[3] + b[2]
+                best = max(best, combined)
+                if a[2] == a[5]:
+                    left_count = a[5] + b[2]
+                if b[3] == b[5]:
+                    right_count = b[5] + a[3]
+            length = a[5] + b[5]
+            return [
+                left_char,
+                right_char,
+                left_count,
+                right_count,
+                best,
+                length
+            ]
+        def build(node, l, r):
+            if l == r:
+                tree[node] = make_leaf(s[l])
+                return
+            mid = (l + r) // 2
+            build(node * 2, l, mid)
+            build(node * 2 + 1, mid + 1, r)
+            tree[node] = merge(
+                tree[node * 2],
+                tree[node * 2 + 1]
+            )
+        def update(node, l, r, index, ch):
+            if l == r:
+                tree[node] = make_leaf(ch)
+                return
+            mid = (l + r) // 2
+            if index <= mid:
+                update(node * 2, l, mid, index, ch)
+            else:
+                update(node * 2 + 1, mid + 1, r, index, ch)
+            tree[node] = merge(
+                tree[node * 2],
+                tree[node * 2 + 1]
+            )
+        build(1, 0, n - 1)
+        ans = []
+        for ch, index in zip(queryCharacters, queryIndices):
+            update(1, 0, n - 1, index, ch)
+            ans.append(tree[1][4])
+        return ans
