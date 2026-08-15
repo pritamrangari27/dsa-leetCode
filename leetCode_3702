@@ -1,0 +1,13 @@
+class Solution:
+    def longestSubsequence(self, nums):
+        total_xor = 0
+        zero_count = 0
+        for x in nums:
+            total_xor ^= x
+            if x == 0:
+                zero_count += 1
+        if total_xor != 0:
+            return len(nums)
+        if zero_count == len(nums):
+            return 0
+        return len(nums) - 1
