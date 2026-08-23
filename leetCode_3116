@@ -1,0 +1,50 @@
+class Solution:
+    def findKthSmallest(self, coins, k):
+
+        def gcd(a, b):
+            while b:
+                a, b = b, a % b
+            return a
+
+        def lcm(a, b):
+            return a // gcd(a, b) * b
+
+        n = len(coins)
+
+        def count(x):
+            total = 0
+
+            for mask in range(1, 1 << n):
+                multiple = 1
+                bits = 0
+
+                for i in range(n):
+                    if mask & (1 << i):
+                        bits += 1
+                        multiple = lcm(multiple, coins[i])
+
+                        if multiple > x:
+                            break
+
+                if multiple > x:
+                    continue
+
+                if bits % 2:
+                    total += x // multiple
+                else:
+                    total -= x // multiple
+
+            return total
+
+        low = 1
+        high = min(coins) * k
+
+        while low < high:
+            mid = (low + high) // 2
+
+            if count(mid) >= k:
+                high = mid
+            else:
+                low = mid + 1
+
+        return low
