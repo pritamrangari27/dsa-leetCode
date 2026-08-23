@@ -1,0 +1,23 @@
+class Solution:
+    def sumGame(self, num):
+        n = len(num)
+        half = n // 2
+
+        left = 0
+        right = 0
+        q_left = 0
+        q_right = 0
+
+        for i in range(half):
+            if num[i] == '?':
+                q_left += 1
+            else:
+                left += int(num[i])
+
+        for i in range(half, n):
+            if num[i] == '?':
+                q_right += 1
+            else:
+                right += int(num[i])
+
+        return 2 * (left - right) != 9 * (q_right - q_left)
