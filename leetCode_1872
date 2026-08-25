@@ -1,0 +1,9 @@
+class Solution:
+    def stoneGameVIII(self, stones):
+        n = len(stones)
+        prefix = sum(stones)
+        dp = prefix
+        for i in range(n - 2, 0, -1):
+            prefix -= stones[i + 1]
+            dp = max(dp, prefix - dp)
+        return dp
