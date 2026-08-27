@@ -1,0 +1,32 @@
+class Solution:
+    def lexGreaterPermutation(self, s, target):
+        n = len(s)
+        s_count = Counter(s)
+        L = 0
+        avail = s_count.copy()
+        for i in range(n):
+            if avail[target[i]] > 0:
+                avail[target[i]] -= 1
+                L += 1
+            else:
+                break
+        start_i = min(L, n - 1)
+        if L == n:
+            avail[target[n - 1]] += 1            
+        alphabet = "abcdefghijklmnopqrstuvwxyz"        
+        for i in range(start_i, -1, -1):
+            target_char = target[i]
+            best_char = None
+            for c in alphabet:
+                if c > target_char and avail[c] > 0:
+                    best_char = c
+                    break
+            if best_char:
+                avail[best_char] -= 1                
+                rem = []
+                for c in alphabet:
+                    rem.extend([c] * avail[c])            
+                return target[:i] + best_char + "".join(rem)
+            if i > 0:
+                avail[target[i - 1]] += 1                
+        return ""
