@@ -1,0 +1,41 @@
+class Solution:
+    def lexPalindromicPermutation(self, s, target):
+        n = len(s)
+        cnt = [0] * 26
+        for ch in s:
+            cnt[ord(ch) - ord('a')] += 1
+        odd = -1
+        for i in range(26):
+            if cnt[i] % 2:
+                if odd != -1:
+                    return ""
+                odd = i
+        mid = ""
+        if odd != -1:
+            mid = chr(ord('a') + odd)
+            cnt[odd] -= 1
+        half = [x // 2 for x in cnt]
+        m = n // 2
+        for i in range(m):
+            x = ord(target[i]) - ord('a')
+            half[x] -= 1
+        valid = all(x >= 0 for x in half)
+        if valid:
+            left = target[:m]
+            candidate = left + mid + left[::-1]
+            if candidate > target:
+                return candidate
+        for i in range(m - 1, -1, -1):
+            x = ord(target[i]) - ord('a')
+            half[x] += 1
+            if any(v < 0 for v in half):
+                continue
+            for c in range(x + 1, 26):
+                if half[c] > 0:
+                    half[c] -= 1
+                    left = target[:i] + chr(ord('a') + c)
+                    for k in range(26):
+                        left += chr(ord('a') + k) * half[k]
+                    answer = left + mid + left[::-1]
+                    return answer
+        return ""
