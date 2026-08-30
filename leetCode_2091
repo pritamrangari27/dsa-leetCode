@@ -1,0 +1,16 @@
+class Solution:
+    def minimumDeletions(self, nums):
+        n = len(nums)
+        min_idx = 0
+        max_idx = 0
+        for i in range(n):
+            if nums[i] < nums[min_idx]:
+                min_idx = i
+            if nums[i] > nums[max_idx]:
+                max_idx = i
+        if min_idx > max_idx:
+            min_idx, max_idx = max_idx, min_idx
+        from_front = max_idx + 1
+        from_back = n - min_idx
+        from_both = (min_idx + 1) + (n - max_idx)
+        return min(from_front, from_back, from_both)
