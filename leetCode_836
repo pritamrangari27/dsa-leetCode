@@ -1,0 +1,17 @@
+class Solution(object):
+    def isRectangleOverlap(self, rec1, rec2):
+        """
+        :type rec1: List[int]
+        :type rec2: List[int]
+        :rtype: bool
+        """
+        
+        # Find intersection boundaries
+        left = max(rec1[0], rec2[0])
+        right = min(rec1[2], rec2[2])
+        
+        bottom = max(rec1[1], rec2[1])
+        top = min(rec1[3], rec2[3])
+        
+        # Overlap exists only if width and height are positive
+        return left < right and bottom < top
